@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace rene_roid {    
+namespace rene_roid
+{
     public class BrainFuckInterpreter : MonoBehaviour
     {
-        [TextArea(15,20)]
+        [TextArea(15, 20)]
         public string code = "";
         public int codePointer = 0;
         public int dataPointer = 0;
@@ -20,7 +21,7 @@ namespace rene_roid {
         public TMP_InputField autoRunCodeDelay;
         public Button nextLine;
 
-        
+
         public GameObject[] cells;
 
         public GameObject cellPrefab;
@@ -58,12 +59,21 @@ namespace rene_roid {
             code = insertCodeField.text;
             codePointer = 0;
             dataPointer = 0;
+            data = new int[30000];
             outputField.text = "Output: ";
             inputField.GetComponent<Image>().color = Color.white;
+
+            string newCode = "";
+            for (int i = 0; i < code.Length; i++)
+            {
+                newCode += code[i];
+            }
+            insertCodeField.text = newCode;
 
             wait = new WaitForSeconds(float.Parse(autoRunCodeDelay.text));
 
             UpdateData();
+            StopCoroutine(InterpretCode());
 
             StartCoroutine(InterpretCode());
         }
@@ -149,7 +159,8 @@ namespace rene_roid {
                 if (autoRunCode.isOn)
                 {
                     yield return wait;
-                } else
+                }
+                else
                 {
                     yield return new WaitUntil(() => nextLinePressed);
                     nextLinePressed = false;
